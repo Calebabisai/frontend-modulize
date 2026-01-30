@@ -17,23 +17,28 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  // Signals para feedback visual
+  // Signals para el estado reactivo
   isLoading = signal(false);
-  errorMessage = signal<string | null>(null);
   showRegisterModal = signal(false);
+  alert = signal<{ text: string; type: 'success' | 'error' } | null>(null);
 
-  // Formulario de Login
   loginForm = this.fb.nonNullable.group({
     email: ['admin@turing.com', [Validators.required, Validators.email]],
     pass: ['123456', [Validators.required]],
   });
 
-  // Formulario de Registro (dentro del modal)
   registerForm = this.fb.nonNullable.group({
     name: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     pass: ['', [Validators.required, Validators.minLength(6)]],
   });
+
+  // Función maestra para notificaciones interactivas
+  private triggerAlert(text: string, type: 'success' | 'error') {
+    this.alert.set({ text, type });
+    // El timeout debe ser mayor a la animación CSS para que se vea fluida
+    setTimeout(() => this.alert.set(null), 4000);
+  }
 
   toggleModal() {
     this.showRegisterModal.update((val) => !val);
@@ -48,16 +53,12 @@ export class LoginComponent {
 
     this.authService
       .login(email, pass)
-      .pipe(
-        // Esto asegura que el botón se reactive pase lo que pase
-        finalize(() => this.isLoading.set(false)),
-      )
+      .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
-        next: () => {
-          this.router.navigate(['/products']);
-        },
+        next: () => this.router.navigate(['/products']),
         error: (err) => {
           console.error('Error en el login:', err);
+          this.triggerAlert('Credenciales incorrectas. Verifica tu correo y contraseña', 'error');
         },
       });
   }
@@ -72,10 +73,14 @@ export class LoginComponent {
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: () => {
-          alert('¡Registro exitoso! Ya puedes iniciar sesión.');
-          this.toggleModal(); // Cierra el modal al terminar
+          // Reemplazamos el alert() por nuestro Toast pro
+          this.triggerAlert('¡Cuenta creada con éxito! Ya puedes iniciar sesión.', 'success');
+          this.toggleModal();
         },
-        error: () => alert('Error al registrar. Verifica los datos.'),
+        error: (err) => {
+          console.error('Error en el registro:', err);
+          this.triggerAlert('No se pudo crear la cuenta. ¿Quizás el correo ya existe?', 'error');
+        },
       });
   }
 }

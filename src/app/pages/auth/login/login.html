@@ -1,4 +1,13 @@
 <div class="login-screen">
+  @if (alert(); as msg) {
+    <div class="toast-notification" [class]="msg.type">
+      <span class="material-symbols-outlined">
+        {{ msg.type === 'success' ? 'check_circle' : 'error' }}
+      </span>
+      <p>{{ msg.text }}</p>
+    </div>
+  }
+
   <div class="hero-panel">
     <div class="brand-container">
       <span class="material-symbols-outlined icon-brand">dataset</span>
