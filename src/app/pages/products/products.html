@@ -1,4 +1,179 @@
-<div>
-  <h1>Dashboard de Productos</h1>
-  <p>Si ves esto, ¡el login fue un éxito total</p>
+<div class="page-wrapper">
+  <app-navbar></app-navbar>
+
+  <section class="hero">
+    <div class="container hero-content">
+      <div class="hero-text">
+        <div class="hero-line"></div>
+        <h1>
+          Gestión de <br />
+          <span class="text-teal">Inventario Activo</span>
+        </h1>
+        <p>Administra, monitorea y escala tus recursos con la plataforma Modulize</p>
+      </div>
+
+      @if (authService.isAdmin()) {
+        <button class="btn-hero" (click)="openAddModal()">
+          <span class="material-icons">add_circle</span>
+          Nuevo Producto
+        </button>
+      }
+    </div>
+  </section>
+
+  <section class="inventory-grid-section">
+    <div class="container">
+      <div class="grid-header-bar">
+        <h2>Catálogo ({{ filteredProducts().length }})</h2>
+
+        <div class="grid-controls">
+          <span
+            class="control-pill"
+            [class.active]="selectedCategoryId() === null"
+            (click)="filterBy(null)"
+          >
+            Todos
+          </span>
+          @for (cat of categories(); track cat.id) {
+            <span
+              class="control-pill"
+              [class.active]="selectedCategoryId() === cat.id"
+              (click)="filterBy(cat.id)"
+            >
+              {{ cat.name }}
+            </span>
+          }
+        </div>
+      </div>
+
+      <div class="cards-grid">
+        @if (isLoading()) {
+          @for (i of [1, 2, 3]; track i) {
+            <div class="wireframe-card skeleton">
+              <div class="card-header-block"></div>
+              <div class="card-body-block"></div>
+            </div>
+          }
+        } @else {
+          @for (product of filteredProducts(); track product.id) {
+            <div class="wireframe-card">
+              <div class="card-header-block">
+                <span class="material-icons card-icon">inventory_2</span>
+                <span class="id-tag">ID: {{ product.id }}</span>
+              </div>
+
+              <div class="card-body-block">
+                <h3 class="product-name">{{ product.name }}</h3>
+
+                <div class="data-row">
+                  <span class="data-label">Categoría</span>
+                  <div class="data-line"></div>
+                  <span class="data-value">{{ product.category?.name || 'General' }}</span>
+                </div>
+
+                <div class="data-row">
+                  <span class="data-label">Precio</span>
+                  <div class="data-line"></div>
+                  <span class="data-value price">${{ product.price }}</span>
+                </div>
+              </div>
+
+              <div class="card-footer-block">
+                @if (authService.isAdmin()) {
+                  <div class="action-buttons">
+                    <button class="btn-action edit" (click)="openEditModal(product)" title="Editar">
+                      <span class="material-icons">edit</span>
+                    </button>
+                    <button
+                      class="btn-action delete"
+                      (click)="deleteProduct(product.id)"
+                      title="Eliminar"
+                    >
+                      <span class="material-icons">delete</span>
+                    </button>
+                  </div>
+                } @else {
+                  <div class="read-only-text">
+                    <span class="material-icons" style="font-size: 14px">lock</span> Solo Lectura
+                  </div>
+                }
+
+                <div class="status-dots">
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                </div>
+              </div>
+            </div>
+          } @empty {
+            <div class="empty-state">
+              <span class="material-icons">search_off</span>
+              <p>No se encontraron productos en esta categoría.</p>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="bottom-section">
+    <div class="container grid-3">
+      <div class="info-card dark">
+        <h3>Laptops</h3>
+        <p>Equipos de alto rendimiento para desarrollo.</p>
+        <button class="btn-link">Ver Categoría</button>
+      </div>
+
+      <div class="info-card teal elevated">
+        <div class="circle-deco"></div>
+        <h3>Periféricos</h3>
+        <p>Teclados, monitores y accesorios esenciales.</p>
+        <button class="btn-white">Ver Categoría</button>
+      </div>
+
+      <div class="info-card dark">
+        <h3>Licencias</h3>
+        <p>Software y herramientas digitales.</p>
+        <button class="btn-link">Ver Categoría</button>
+      </div>
+    </div>
+  </section>
+
+  <app-footer></app-footer>
+
+  @if (showModal()) {
+    <div class="modal-overlay">
+      <div class="modal-content scale-in">
+        <div class="modal-header">
+          <h2>{{ isEditing() ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
+          <button class="btn-close" (click)="closeModal()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc">Completa los detalles del activo para el inventario.</p>
+          <div
+            style="
+              height: 100px;
+              background: #1e293b;
+              border-radius: 8px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: #64748b;
+              border: 1px dashed #334155;
+            "
+          >
+            Formulario Placeholder
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+          <button class="btn-save" (click)="saveProduct()">
+            {{ isEditing() ? 'Guardar Cambios' : 'Crear Producto' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 </div>

@@ -1,14 +1,22 @@
 :host {
+  /* Paleta Exacta de Products */
   --primary: #11c4d4;
-  --bg-dark: #102022;
-  --surface-dark: #1c2627;
-  --border-dark: #3b5254;
-  --text-secondary: #9db7b9;
+  --primary-hover: #0e9aa8;
+  --dark-bg: #0f172a; /* Fondo Principal */
+  --card-bg: #1e293b; /* Inputs, Modales y Tarjetas */
+  --light-bg: #f8fafc;
+  --text-main: #f1f5f9; /* Texto Blanco/Claro */
+  --text-muted: #94a3b8; /* Texto Gris/Apagado */
+
+  /* Variable auxiliar para bordes sutiles (Slate-700) */
+  --border-color: #334155;
+
   display: block;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  background-color: var(--bg-dark);
+  background-color: var(--dark-bg);
+  font-family: 'Inter', sans-serif;
 }
 
 .login-screen {
@@ -17,14 +25,19 @@
   width: 100%;
 }
 
-/* Panel Izquierdo */
+/* --- Panel Izquierdo (Hero) --- */
 .hero-panel {
   display: none;
   flex: 1.2;
   flex-direction: column;
   justify-content: space-between;
   padding: 60px;
-  background: radial-gradient(circle at bottom right, rgba(17, 196, 212, 0.1), transparent);
+  /* Degradado suave con el nuevo dark-bg */
+  background: radial-gradient(circle at bottom right, rgba(17, 196, 212, 0.15), var(--dark-bg));
+  border-right: 1px solid var(--border-color);
+
+  /* Animación de entrada */
+  animation: slideInRight 0.6s ease-out forwards;
 }
 
 @media (min-width: 1024px) {
@@ -43,7 +56,7 @@
   color: var(--primary);
 }
 .brand-name {
-  color: white;
+  color: var(--text-main);
   font-weight: 700;
   font-size: 1.25rem;
 }
@@ -51,14 +64,14 @@
 .hero-title {
   font-size: 3.5rem;
   font-weight: 900;
-  color: white;
+  color: var(--text-main);
   line-height: 1.1;
 }
 .text-cyan {
   color: var(--primary);
 }
 .hero-description {
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-size: 1.1rem;
   max-width: 400px;
   margin-top: 20px;
@@ -77,45 +90,49 @@
 .dot-sub {
   height: 4px;
   width: 8px;
-  background: #334155;
+  background: var(--border-color);
   border-radius: 2px;
 }
 
-/* Panel Derecho */
+/* --- Panel Derecho (Formulario) --- */
 .form-panel {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 40px;
-  background-color: var(--bg-dark); /* Evita bordes blancos */
+  background-color: var(--dark-bg);
 }
 
 .form-wrapper {
   width: 100%;
   max-width: 400px;
+  /* Animación de caída */
+  animation: slideInDown 0.5s ease-out forwards;
 }
+
 .form-header h2 {
   font-size: 2rem;
-  color: white;
+  color: var(--text-main);
   margin: 0;
 }
 .form-header p {
-  color: var(--text-secondary);
+  color: var(--text-muted);
   margin-top: 8px;
 }
 
-/* Formulario */
+/* --- Inputs & Labels --- */
 .input-group {
   margin-top: 24px;
 }
 .label-text {
-  color: white;
+  color: var(--text-main);
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
   font-size: 0.875rem;
 }
+
 .input-container {
   position: relative;
 }
@@ -125,68 +142,78 @@
   left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-size: 20px;
+  transition: color 0.3s;
 }
 
 input {
   width: 100%;
   box-sizing: border-box;
   padding: 14px 14px 14px 46px;
-  background-color: var(--surface-dark);
-  border: 1px solid var(--border-dark);
+
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+
   border-radius: 8px;
-  color: white;
   font-size: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Interactividad del Input */
 input:focus {
   outline: none;
   border-color: var(--primary);
+  background-color: #253347; /* Un tono ligeramente más claro al enfocar */
+  transform: translateX(8px); /* Desplazamiento lateral */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+input:focus + .input-icon {
+  color: var(--primary);
+}
+
+/* --- Botones Interactivos --- */
 .btn-primary {
   width: 100%;
   padding: 14px;
   background-color: var(--primary);
-  color: var(--bg-dark);
+  color: var(--dark-bg); /* Texto oscuro para contraste */
   font-weight: 800;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   margin-top: 32px;
+
+  /* Transiciones suaves */
+  transition:
+    transform 0.2s,
+    filter 0.2s,
+    box-shadow 0.2s;
 }
 
-/* Modal Estilos */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(5px);
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-2px); /* Se levanta */
+  box-shadow: 0 8px 20px rgba(17, 196, 212, 0.25);
 }
 
-.modal-content {
-  background: var(--surface-dark);
-  width: 90%;
-  max-width: 450px;
-  padding: 40px;
-  border-radius: 12px;
-  border: 1px solid var(--border-dark);
-  position: relative;
+.btn-primary:active:not(:disabled) {
+  transform: scale(0.96); /* Efecto de click */
 }
 
-.btn-close {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Enlaces */
+.footer-link {
+  text-align: center;
+  margin-top: 24px;
+  color: var(--text-muted);
+  font-size: 0.875rem;
 }
 .btn-link {
   background: none;
@@ -196,98 +223,59 @@ input:focus {
   cursor: pointer;
   padding: 0;
 }
-.footer-link {
-  text-align: center;
-  margin-top: 24px;
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-}
-/* --- Definición de Keyframes --- */
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.btn-link:hover {
+  text-decoration: underline;
 }
 
-@keyframes slideInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* --- Modal Styles --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.85); /* Dark BG con transparencia */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease-out;
 }
 
-@keyframes scaleUp {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* --- Aplicación a los Elementos --- */
-
-/* Los paneles entran suavemente al cargar */
-.hero-panel {
-  animation: slideInRight 0.6s ease-out forwards;
-}
-
-.form-wrapper {
-  animation: slideInDown 0.5s ease-out forwards;
-}
-
-/* Modal de Registro con escala */
 .modal-content {
-  animation: scaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: var(--card-bg); /* Usando el nuevo color de tarjeta */
+  width: 90%;
+  max-width: 450px;
+  padding: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+
+  /* Animación de rebote */
+  animation: scaleUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Alertas personalizadas con entrada lateral */
-.custom-alert {
-  animation: slideInRight 0.4s ease-out;
+.btn-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.btn-close:hover {
+  color: var(--text-main);
 }
 
-/* --- Interactividad (Hover & Active) --- */
-.btn-primary {
-  transition: all 0.2s ease;
-}
-
-.btn-primary:hover {
-  filter: brightness(1.1);
-  box-shadow: 0 4px 12px rgba(17, 196, 212, 0.3);
-}
-
-.btn-primary:active {
-  transform: scale(0.96);
-}
-
-input {
-  transition:
-    border-color 0.2s,
-    transform 0.2s;
-}
-
-input:focus {
-  transform: translateX(5px); /* Feedback visual al escribir */
-}
-/* --- Animaciones de Notificación (Toasts) --- */
+/* --- Toasts (Notificaciones) --- */
 .toast-notification {
   position: fixed;
   top: 24px;
   right: 24px;
-  background-color: var(--surface-dark);
+  background-color: var(--card-bg);
   border-left: 4px solid var(--primary);
-  color: white;
+  color: var(--text-main);
   padding: 16px 20px;
   border-radius: 8px;
   display: flex;
@@ -305,60 +293,42 @@ input:focus {
   border-left-color: #ef4444;
 }
 
-/* --- Micro-interacciones de Formulario --- */
-input {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* --- Keyframes --- */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
-
-input:focus {
-  transform: translateX(8px); /* Pequeño desplazamiento al enfocar */
-  background-color: #233133;
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-
-.btn-primary {
-  transition:
-    transform 0.2s,
-    filter 0.2s,
-    box-shadow 0.2s;
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
-
-.btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
-  box-shadow: 0 8px 20px rgba(17, 196, 212, 0.3);
-}
-
-.btn-primary:active:not(:disabled) {
-  transform: scale(0.96);
-}
-
-/* --- Animación de Modal (Efecto Elástico) --- */
-.modal-overlay {
-  animation: fadeIn 0.3s ease-out;
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
-  }
-}
-
-.modal-content {
-  /* Usamos cubic-bezier para un efecto de rebote profesional */
-  animation: scaleUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-/* --- Keyframes Adicionales --- */
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
   }
 }

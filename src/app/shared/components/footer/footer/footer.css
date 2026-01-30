@@ -1,0 +1,41 @@
+.footer {
+  background-color: #0f172a;
+  padding: 60px 0;
+  border-top: 1px solid #1e293b;
+  display: flex;
+  justify-content: center;
+}
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.social-dots {
+  display: flex;
+  gap: 12px;
+}
+.dot {
+  width: 12px;
+  height: 12px;
+  background-color: #334155;
+  border-radius: 50%;
+}
+.dot.active {
+  background-color: #11c4d4;
+}
+.footer-links {
+  display: flex;
+  gap: 12px;
+}
+.bar {
+  width: 30px;
+  height: 4px;
+  background-color: #334155;
+  border-radius: 2px;
+}
+p {
+  color: #64748b;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+}

@@ -3,15 +3,15 @@ export interface User {
   email: string;
   name: string;
   role?: string;
-  roleId: number;
+  roleId?: number;
 }
 
 export interface LoginResponse {
-  access_token: string;
   user: User;
+  access_token: string;
 }
 
 export interface RegisterResponse {
-  message: string;
-  userId: number;
+  user: User;
+  access_token: string;
 }
