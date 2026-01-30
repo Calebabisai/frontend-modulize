@@ -37,10 +37,6 @@ export class ProductsComponent implements OnInit {
   });
 
   ngOnInit() {
-    // DEBUG: Verificar quién está logueado
-    console.log('Usuario actual:', this.authService.currentUser());
-    console.log('¿Es Admin?:', this.authService.isAdmin());
-
     this.loadData();
   }
 
@@ -63,6 +59,17 @@ export class ProductsComponent implements OnInit {
     this.http.get<any[]>(`${environment.baseUrl}/categories`).subscribe({
       next: (data) => this.categories.set(data),
     });
+  }
+  // --- Función para seleccionar categoría y hacer scroll ---
+  selectCategoryAndScroll(catId: number) {
+    // 1. Actualizar el filtro
+    this.selectedCategoryId.set(catId);
+
+    // 2. Scroll suave hacia la tabla de productos
+    const gridSection = document.querySelector('.inventory-grid-section');
+    if (gridSection) {
+      gridSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   // --- Acciones de UI ---

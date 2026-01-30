@@ -117,24 +117,39 @@
   </section>
 
   <section class="bottom-section">
-    <div class="container grid-3">
-      <div class="info-card dark">
-        <h3>Laptops</h3>
-        <p>Equipos de alto rendimiento para desarrollo.</p>
-        <button class="btn-link">Ver Categoría</button>
-      </div>
+    <div class="container">
+      <h2 style="color: white; margin-bottom: 30px; text-align: center">Explora por Categorías</h2>
 
-      <div class="info-card teal elevated">
-        <div class="circle-deco"></div>
-        <h3>Periféricos</h3>
-        <p>Teclados, monitores y accesorios esenciales.</p>
-        <button class="btn-white">Ver Categoría</button>
-      </div>
+      <div class="grid-3">
+        @for (cat of categories(); track cat.id) {
+          <div
+            class="info-card"
+            [class.teal]="selectedCategoryId() === cat.id"
+            [class.elevated]="selectedCategoryId() === cat.id"
+            [class.dark]="selectedCategoryId() !== cat.id"
+            (click)="selectCategoryAndScroll(cat.id)"
+            style="cursor: pointer"
+          >
+            @if (selectedCategoryId() === cat.id) {
+              <div class="circle-deco"></div>
+            }
 
-      <div class="info-card dark">
-        <h3>Licencias</h3>
-        <p>Software y herramientas digitales.</p>
-        <button class="btn-link">Ver Categoría</button>
+            <h3>{{ cat.name }}</h3>
+
+            <p>Ver todos los activos relacionados con {{ cat.name }}.</p>
+
+            @if (selectedCategoryId() === cat.id) {
+              <button class="btn-white">Viendo Ahora</button>
+            } @else {
+              <button class="btn-link">Ver Categoría</button>
+            }
+          </div>
+        } @empty {
+          <div class="info-card dark">
+            <h3>Cargando...</h3>
+            <p>Obteniendo categorías del sistema.</p>
+          </div>
+        }
       </div>
     </div>
   </section>
@@ -151,7 +166,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <p class="modal-desc">Completa los detalles del activo para el inventario.</p>
+          <p class="modal-desc">Completa los detalles del producto para el inventario</p>
           <div
             style="
               height: 100px;
