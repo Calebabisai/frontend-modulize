@@ -1,0 +1,84 @@
+.login-screen {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #102022; /* El fondo oscuro que elegiste */
+}
+
+/* Panel Izquierdo: Ahora sí se verá */
+.hero-panel {
+  display: none; /* Oculto en móviles */
+  flex: 1.2;
+  position: relative;
+  background: linear-gradient(135deg, #102022 0%, #11c4d433 100%);
+  padding: 60px;
+}
+
+@media (min-width: 768px) {
+  .hero-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+}
+
+/* Panel Derecho: El Formulario */
+.form-panel {
+  flex: 1;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.form-wrapper {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Arreglo de Iconos */
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+input {
+  width: 100%;
+  padding: 12px 12px 12px 42px; /* Espacio para el icono */
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.btn-primary {
+  width: 100%;
+  background-color: #11c4d4;
+  color: #102022;
+  padding: 14px;
+  border-radius: 8px;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

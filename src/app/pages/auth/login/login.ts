@@ -2,7 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -29,18 +30,23 @@ export class LoginComponent {
     if (this.loginForm.invalid) return;
 
     this.isLoading.set(true);
-    this.errorMessage.set(null);
-
     const { email, pass } = this.loginForm.getRawValue();
 
-    this.authService.login(email, pass).subscribe({
-      next: () => {
-        this.router.navigate(['/products']); // Directo al dashboard profesional
-      },
-      error: (err) => {
-        this.isLoading.set(false);
-        this.errorMessage.set('Credenciales incorrectas, bro. Revisa el seed.');
-      },
-    });
+    this.authService
+      .login(email, pass)
+      .pipe(
+        // Esto asegura que el botón se reactive pase lo que pase
+        finalize(() => this.isLoading.set(false)),
+      )
+      .subscribe({
+        next: () => {
+          console.log('Login exitoso, navegando...');
+          this.router.navigate(['/products']);
+        },
+        error: (err) => {
+          console.error('Error en el login:', err);
+          // Aquí podrías mostrar una alerta con tu color 'primary'
+        },
+      });
   }
 }
