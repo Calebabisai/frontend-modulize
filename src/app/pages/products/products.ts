@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-products',
@@ -7,4 +8,4 @@ import { Component } from '@angular/core';
   templateUrl: './products.html',
   styleUrl: './products.css',
 })
-export class Products {}
+export class ProductsComponent {}

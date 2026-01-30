@@ -1,55 +1,103 @@
 <div class="login-screen">
   <div class="hero-panel">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <div class="flex items-center gap-2">
-        <span class="material-symbols-outlined text-primary" style="font-size: 32px">dataset</span>
-        <span class="text-white font-bold text-xl">DataFlow</span>
-      </div>
-      <div>
-        <h1 class="text-white text-5xl font-black leading-tight">
-          Turn your data into <br />
-          <span class="text-primary">actionable insights.</span>
-        </h1>
-        <p class="text-text-secondary mt-4 text-lg">
-          Join thousands of developers building the future.
-        </p>
-      </div>
-      <div class="flex gap-2">
-        <div class="h-1 w-8 bg-primary rounded-full"></div>
-        <div class="h-1 w-2 bg-slate-700 rounded-full"></div>
-      </div>
+    <div class="brand-container">
+      <span class="material-symbols-outlined icon-brand">dataset</span>
+      <span class="brand-name">Modulize</span>
+    </div>
+
+    <div class="hero-text-group">
+      <h1 class="hero-title">
+        Transforma tus datos en <br />
+        <span class="text-cyan">información procesable</span>
+      </h1>
+      <p class="hero-description">
+        Únete a miles de personas que almacenan sus datos de manera segura y eficiente.
+      </p>
+    </div>
+
+    <div class="decoration-dots">
+      <div class="dot-main"></div>
+      <div class="dot-sub"></div>
     </div>
   </div>
 
   <div class="form-panel">
     <div class="form-wrapper">
-      <h2 class="text-3xl font-bold text-slate-900">Welcome back</h2>
-      <p class="text-slate-500 mt-2">Please enter your details to access your account.</p>
+      <div class="form-header">
+        <h2>¡Bienvenido!</h2>
+        <p>Ingresa tus datos para acceder a tu cuenta.</p>
+      </div>
 
-      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="mt-8">
-        <div class="flex flex-col gap-4">
-          <div>
-            <label class="text-sm font-semibold text-slate-900">Email address</label>
-            <div class="input-group">
-              <span class="material-symbols-outlined input-icon">mail</span>
-              <input type="email" formControlName="email" placeholder="name@company.com" />
-            </div>
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <div class="input-group">
+          <label class="label-text">Correo electrónico</label>
+          <div class="input-container">
+            <span class="material-symbols-outlined input-icon">mail</span>
+            <input type="email" formControlName="email" placeholder="nombre@empresa.com" />
           </div>
-
-          <div>
-            <label class="text-sm font-semibold text-slate-900">Password</label>
-            <div class="input-group">
-              <span class="material-symbols-outlined input-icon">lock</span>
-              <input type="password" formControlName="pass" placeholder="••••••••" />
-            </div>
-          </div>
-
-          <button type="submit" class="btn-primary" [disabled]="isLoading()">
-            {{ isLoading() ? 'Signing in...' : 'Sign in' }}
-          </button>
         </div>
+
+        <div class="input-group">
+          <label class="label-text">Contraseña</label>
+          <div class="input-container">
+            <span class="material-symbols-outlined input-icon">lock</span>
+            <input type="password" formControlName="pass" placeholder="••••••••" />
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="isLoading()">
+          {{ isLoading() ? 'Iniciando sesión...' : 'Iniciar sesión' }}
+        </button>
       </form>
+
+      <p class="footer-link">
+        ¿No tienes cuenta? <button (click)="toggleModal()" class="btn-link">Regístrate aquí</button>
+      </p>
     </div>
   </div>
 </div>
+
+@if (showRegisterModal()) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <button class="btn-close" (click)="toggleModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <div class="form-header">
+        <h2>Crea tu cuenta</h2>
+        <p>Únete a la plataforma Modulize.</p>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+        <div class="input-group">
+          <label class="label-text">Nombre completo</label>
+          <div class="input-container">
+            <span class="material-symbols-outlined input-icon">person</span>
+            <input type="text" formControlName="name" placeholder="Tu nombre" />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="label-text">Correo electrónico</label>
+          <div class="input-container">
+            <span class="material-symbols-outlined input-icon">mail</span>
+            <input type="email" formControlName="email" placeholder="nombre@empresa.com" />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="label-text">Contraseña</label>
+          <div class="input-container">
+            <span class="material-symbols-outlined input-icon">lock</span>
+            <input type="password" formControlName="pass" placeholder="••••••••" />
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="isLoading()">
+          {{ isLoading() ? 'Finalizar registro' : 'Registrarse' }}
+        </button>
+      </form>
+    </div>
+  </div>
+}

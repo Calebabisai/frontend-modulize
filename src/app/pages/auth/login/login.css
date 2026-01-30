@@ -1,84 +1,204 @@
+:host {
+  --primary: #11c4d4;
+  --bg-dark: #102022;
+  --surface-dark: #1c2627;
+  --border-dark: #3b5254;
+  --text-secondary: #9db7b9;
+  display: block;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--bg-dark);
+}
+
 .login-screen {
   display: flex;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  background-color: #102022; /* El fondo oscuro que elegiste */
+  height: 100%;
+  width: 100%;
 }
 
-/* Panel Izquierdo: Ahora sí se verá */
+/* Panel Izquierdo */
 .hero-panel {
-  display: none; /* Oculto en móviles */
+  display: none;
   flex: 1.2;
-  position: relative;
-  background: linear-gradient(135deg, #102022 0%, #11c4d433 100%);
+  flex-direction: column;
+  justify-content: space-between;
   padding: 60px;
+  background: radial-gradient(circle at bottom right, rgba(17, 196, 212, 0.1), transparent);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .hero-panel {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
   }
 }
 
-.hero-content {
-  position: relative;
-  z-index: 10;
+.brand-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.icon-brand {
+  font-size: 32px;
+  color: var(--primary);
+}
+.brand-name {
+  color: white;
+  font-weight: 700;
+  font-size: 1.25rem;
 }
 
-/* Panel Derecho: El Formulario */
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: white;
+  line-height: 1.1;
+}
+.text-cyan {
+  color: var(--primary);
+}
+.hero-description {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  max-width: 400px;
+  margin-top: 20px;
+}
+
+.decoration-dots {
+  display: flex;
+  gap: 8px;
+}
+.dot-main {
+  height: 4px;
+  width: 32px;
+  background: var(--primary);
+  border-radius: 2px;
+}
+.dot-sub {
+  height: 4px;
+  width: 8px;
+  background: #334155;
+  border-radius: 2px;
+}
+
+/* Panel Derecho */
 .form-panel {
   flex: 1;
-  background: white;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 40px;
+  background-color: var(--bg-dark); /* Evita bordes blancos */
 }
 
 .form-wrapper {
   width: 100%;
   max-width: 400px;
 }
+.form-header h2 {
+  font-size: 2rem;
+  color: white;
+  margin: 0;
+}
+.form-header p {
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
 
-/* Arreglo de Iconos */
+/* Formulario */
 .input-group {
+  margin-top: 24px;
+}
+.label-text {
+  color: white;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+.input-container {
   position: relative;
-  display: flex;
-  align-items: center;
 }
 
 .input-icon {
   position: absolute;
-  left: 12px;
-  color: #94a3b8;
-  pointer-events: none;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  font-size: 20px;
 }
 
 input {
   width: 100%;
-  padding: 12px 12px 12px 42px; /* Espacio para el icono */
-  border: 1px solid #cbd5e1;
+  box-sizing: border-box;
+  padding: 14px 14px 14px 46px;
+  background-color: var(--surface-dark);
+  border: 1px solid var(--border-dark);
   border-radius: 8px;
-  font-size: 16px;
+  color: white;
+  font-size: 1rem;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary);
 }
 
 .btn-primary {
   width: 100%;
-  background-color: #11c4d4;
-  color: #102022;
   padding: 14px;
-  border-radius: 8px;
+  background-color: var(--primary);
+  color: var(--bg-dark);
   font-weight: 800;
   border: none;
+  border-radius: 8px;
   cursor: pointer;
-  margin-top: 20px;
-  transition: opacity 0.2s;
+  margin-top: 32px;
 }
 
-.btn-primary:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
+/* Modal Estilos */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background: var(--surface-dark);
+  width: 90%;
+  max-width: 450px;
+  padding: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border-dark);
+  position: relative;
+}
+
+.btn-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+.footer-link {
+  text-align: center;
+  margin-top: 24px;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
 }
