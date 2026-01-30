@@ -20,6 +20,7 @@ export class AuthService {
   // Exponemos el usuario como lectura y un computado para saber si está logueado
   currentUser = this.#currentUser.asReadonly();
   isAuthenticated = computed(() => !!this.#currentUser());
+  isAdmin = computed(() => this.#currentUser()?.roleId === 1);
 
   // Usamos RxJS por su excelente manejo de flujos asíncronos
   login(email: string, pass: string): Observable<LoginResponse> {
