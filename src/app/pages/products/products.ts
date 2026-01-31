@@ -28,6 +28,8 @@ export class ProductsComponent implements OnInit {
   products = signal<Product[]>([]);
   categories = signal<Category[]>([]);
   isLoading = signal(true);
+  currentPage = signal(1);
+  pageSize = signal(6);
 
   // --- SIGNALS DE ESTADO ---
   // CORRECCIÓN: Cambiado de number | null a string | null
@@ -46,6 +48,25 @@ export class ProductsComponent implements OnInit {
     // CORRECCIÓN: El categoryId ahora espera un string
     categoryId: [null as string | null, [Validators.required]],
     imageUrl: [''],
+  });
+
+  // Calcula el total de páginas
+  totalPages = computed(() => {
+    const total = this.filteredProducts().length;
+    return Math.ceil(total / this.pageSize());
+  });
+
+  // Genera un arreglo con los números de página [1, 2, 3...]
+  pageNumbers = computed(() => {
+    const pages = this.totalPages();
+    return Array.from({ length: pages }, (_, i) => i + 1);
+  });
+
+  // Productos que se ven actualmente
+  paginatedProducts = computed(() => {
+    const startIndex = (this.currentPage() - 1) * this.pageSize();
+    const endIndex = startIndex + this.pageSize();
+    return this.filteredProducts().slice(startIndex, endIndex);
   });
 
   filteredProducts = computed(() => {
@@ -231,6 +252,23 @@ export class ProductsComponent implements OnInit {
           alert('Error al crear: ' + err.error?.message);
         },
       });
+    }
+  }
+  goToPage(page: number) {
+    this.currentPage.set(page);
+    // Scroll suave hacia arriba para que el usuario vea el inicio de la lista
+    window.scrollTo({ top: 400, behavior: 'smooth' });
+  }
+
+  nextPage() {
+    if (this.currentPage() < this.totalPages()) {
+      this.goToPage(this.currentPage() + 1);
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage() > 1) {
+      this.goToPage(this.currentPage() - 1);
     }
   }
 }

@@ -68,7 +68,7 @@
             </div>
           }
         } @else {
-          @for (product of filteredProducts(); track product.id) {
+          @for (product of paginatedProducts(); track product.id) {
             <div class="wireframe-card">
               <div
                 class="card-header-block"
@@ -140,6 +140,34 @@
           }
         }
       </div>
+
+      @if (totalPages() > 1) {
+        <div class="pagination-container">
+          <button class="btn-page-nav" (click)="prevPage()" [disabled]="currentPage() === 1">
+            <span class="material-icons">chevron_left</span>
+          </button>
+
+          <div class="page-numbers">
+            @for (page of pageNumbers(); track page) {
+              <button
+                class="btn-page-num"
+                [class.active]="page === currentPage()"
+                (click)="goToPage(page)"
+              >
+                {{ page }}
+              </button>
+            }
+          </div>
+
+          <button
+            class="btn-page-nav"
+            (click)="nextPage()"
+            [disabled]="currentPage() === totalPages()"
+          >
+            <span class="material-icons">chevron_right</span>
+          </button>
+        </div>
+      }
     </div>
   </section>
 
