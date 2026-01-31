@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth.service';
-import { Router } from '@angular/router'; // 👈 Importa el Router
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
