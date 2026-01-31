@@ -60,7 +60,7 @@
                 [style.background-image]="product.imageUrl ? 'url(' + product.imageUrl + ')' : null"
               >
                 @if (!product.imageUrl) {
-                  <span class="material-icons card-icon">inventory_2</span>
+                  <span class="material-icons card-icon">inventory</span>
                 }
 
                 @if (product.imageUrl) {
@@ -73,10 +73,22 @@
               <div class="card-body-block">
                 <h3 class="product-name">{{ product.name }}</h3>
 
+                <p class="product-short-desc">
+                  {{ product.description || 'Sin detalles adicionales' }}
+                </p>
+
                 <div class="data-row">
                   <span class="data-label">Categoría</span>
                   <div class="data-line"></div>
                   <span class="data-value">{{ product.category?.name || 'General' }}</span>
+                </div>
+
+                <div class="data-row">
+                  <span class="data-label">Stock</span>
+                  <div class="data-line"></div>
+                  <span class="data-value" [class.low-stock]="product.stock < 5">
+                    {{ product.stock }} u.
+                  </span>
                 </div>
 
                 <div class="data-row">
@@ -101,16 +113,8 @@
                     </button>
                   </div>
                 } @else {
-                  <div class="read-only-text">
-                    <span class="material-icons" style="font-size: 14px">lock</span> Solo Lectura
-                  </div>
+                  <div class="read-only-text">Solo Lectura</div>
                 }
-
-                <div class="status-dots">
-                  <div class="dot"></div>
-                  <div class="dot"></div>
-                  <div class="dot"></div>
-                </div>
               </div>
             </div>
           } @empty {
@@ -183,7 +187,7 @@
 
           <form [formGroup]="productForm" class="product-form">
             <div class="form-group">
-              <label for="name">Nombre del Producto</label>
+              <label for="name">Nombre del Producto *</label>
               <input
                 type="text"
                 id="name"
@@ -193,9 +197,20 @@
               />
             </div>
 
+            <div class="form-group">
+              <label for="description">Descripción / Especificaciones</label>
+              <textarea
+                id="description"
+                formControlName="description"
+                class="form-input"
+                rows="2"
+                placeholder="Ej: Procesador M2, 16GB RAM..."
+              ></textarea>
+            </div>
+
             <div class="form-row">
               <div class="form-group half">
-                <label for="price">Precio</label>
+                <label for="price">Precio *</label>
                 <input
                   type="number"
                   id="price"
@@ -205,14 +220,25 @@
                 />
               </div>
               <div class="form-group half">
-                <label for="category">Categoría</label>
-                <select id="category" formControlName="categoryId" class="form-input form-select">
-                  <option [ngValue]="null">Selecciona...</option>
-                  @for (cat of categories(); track cat.id) {
-                    <option [ngValue]="cat.id">{{ cat.name }}</option>
-                  }
-                </select>
+                <label for="stock">Stock *</label>
+                <input
+                  type="number"
+                  id="stock"
+                  formControlName="stock"
+                  class="form-input"
+                  placeholder="0"
+                />
               </div>
+            </div>
+
+            <div class="form-group">
+              <label for="category">Categoría *</label>
+              <select id="category" formControlName="categoryId" class="form-input form-select">
+                <option [ngValue]="null">Selecciona...</option>
+                @for (cat of categories(); track cat.id) {
+                  <option [ngValue]="cat.id">{{ cat.name }}</option>
+                }
+              </select>
             </div>
 
             <div class="form-group">

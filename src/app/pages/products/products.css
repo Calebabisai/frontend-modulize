@@ -117,8 +117,8 @@
 /* --- Cards Grid --- */
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 32px;
 }
 
 /* --- DISEÑO DE TARJETA WIREFRAME --- */
@@ -133,7 +133,10 @@
     transform 0.2s,
     box-shadow 0.2s,
     border-color 0.2s;
-  height: 320px; /* Un poco más alto para acomodar mejor la info */
+  height: auto;
+  min-height: 440px;
+  display: flex;
+  flex-direction: column;
 }
 
 .wireframe-card:hover {
@@ -154,7 +157,6 @@
   transition: background-image 0.3s ease;
 }
 
-/* 🔥 ESTILOS NUEVOS: Soporte para Imágenes en Productos */
 .card-header-block.has-image {
   background-size: cover;
   background-position: center;
@@ -467,7 +469,6 @@
   color: var(--text-muted);
 }
 
-/* 🔥 NUEVOS ESTILOS DEL FORMULARIO */
 .product-form {
   display: flex;
   flex-direction: column;
@@ -601,4 +602,21 @@ label {
   100% {
     opacity: 1;
   }
+}
+/* Truncar descripción larga en la tarjeta */
+.product-short-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 15px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Máximo 2 líneas */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
+/* Alerta visual de poco stock */
+.data-value.low-stock {
+  color: #fb923c; /* Naranja brillante */
+  font-weight: 800;
 }

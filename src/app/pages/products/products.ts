@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Navbar } from '../../shared/components/navbar/navbar/navbar';
 import { Footer } from '../../shared/components/footer/footer/footer';
 import { AuthService } from '../../core/services/auth.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -32,7 +32,9 @@ export class ProductsComponent implements OnInit {
   // Usamos un campo de texto para la URL de la imagen por ahora.
   productForm = this.fb.group({
     name: ['', [Validators.required]],
+    description: [''],
     price: [0, [Validators.required, Validators.min(0)]],
+    stock: [0, [Validators.required, Validators.min(0)]],
     categoryId: [null as number | null, [Validators.required]],
     imageUrl: [''],
   });
@@ -44,6 +46,13 @@ export class ProductsComponent implements OnInit {
     if (!catId) return allProducts;
     return allProducts.filter((p) => p.categoryId === catId || p.category?.id === catId);
   });
+
+  private getHeaders() {
+    const token = localStorage.getItem('access_token');
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  }
 
   ngOnInit() {
     this.loadData();
@@ -71,10 +80,10 @@ export class ProductsComponent implements OnInit {
   }
   // --- Función para seleccionar categoría y hacer scroll ---
   selectCategoryAndScroll(catId: number) {
-    // 1. Actualizar el filtro
+    // Actualizar el filtro
     this.selectedCategoryId.set(catId);
 
-    // 2. Scroll suave hacia la tabla de productos
+    // croll suave hacia la tabla de productos
     const gridSection = document.querySelector('.inventory-grid-section');
     if (gridSection) {
       gridSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -90,7 +99,8 @@ export class ProductsComponent implements OnInit {
   openAddModal() {
     this.isEditing.set(false);
     this.selectedProduct.set(null);
-    this.productForm.reset({ price: 0 });
+    // RESETEAR TAMBIÉN LA DESCRIPCIÓN
+    this.productForm.reset({ price: 0, stock: 0, description: '' });
     this.showModal.set(true);
   }
 
@@ -98,12 +108,13 @@ export class ProductsComponent implements OnInit {
     this.isEditing.set(true);
     this.selectedProduct.set(product);
 
-    // PRE-LLENAR EL FORMULARIO AL ABRIR "EDITAR"
     this.productForm.patchValue({
       name: product.name,
+      description: product.description || '',
       price: product.price,
+      stock: product.stock,
       categoryId: product.categoryId || product.category?.id,
-      imageUrl: product.imageUrl || '', // Cargar la URL si existe
+      imageUrl: product.imageUrl || '',
     });
 
     this.showModal.set(true);
@@ -114,45 +125,67 @@ export class ProductsComponent implements OnInit {
   }
 
   deleteProduct(id: number) {
-    if (confirm('¿Seguro que quieres eliminar este producto? Esta acción es irreversible')) {
-      this.http.delete(`${environment.baseUrl}/products/${id}`).subscribe({
-        next: () => {
-          this.products.update((prev) => prev.filter((p) => p.id !== id));
-        },
-      });
+    if (confirm('¿Seguro que quieres eliminar este producto?')) {
+      this.http
+        .delete(`${environment.baseUrl}/products/${id}`, {
+          headers: this.getHeaders(),
+        })
+        .subscribe({
+          next: () => {
+            this.products.update((prev) => prev.filter((p) => p.id !== id));
+          },
+          error: (err) => alert('Error al eliminar: ' + err.error?.message),
+        });
     }
   }
 
   saveProduct() {
     if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
       alert('Por favor completa los campos requeridos');
       return;
     }
 
+    // Preparamos el Token de Autorización
+    const token = localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
     const formValue = this.productForm.getRawValue();
     this.isLoading.set(true);
+
+    // Payload con conversión de tipos para Prisma
+    const payload = {
+      ...formValue,
+      price: Number(formValue.price),
+      stock: Number(formValue.stock),
+      categoryId: Number(formValue.categoryId),
+      description: formValue.description?.trim() || null,
+      imageUrl: formValue.imageUrl?.trim() || null,
+    };
 
     if (this.isEditing() && this.selectedProduct()) {
       // --- LÓGICA DE EDICIÓN (PATCH) ---
       const id = this.selectedProduct().id;
-      this.http.patch<any>(`${environment.baseUrl}/products/${id}`, formValue).subscribe({
-        next: (updatedProduct) => {
-          // Actualizar la lista localmente
-          this.products.update((prev) => prev.map((p) => (p.id === id ? updatedProduct : p)));
-          this.closeModal();
-          this.isLoading.set(false);
-        },
-        error: (err) => {
-          console.error(err);
-          this.isLoading.set(false);
-          alert('Error al actualizar el producto');
-        },
-      });
+      this.http
+        .patch<any>(`${environment.baseUrl}/products/${id}`, payload, { headers })
+        .subscribe({
+          next: (updatedProduct) => {
+            this.products.update((prev) => prev.map((p) => (p.id === id ? updatedProduct : p)));
+            this.closeModal();
+            this.isLoading.set(false);
+          },
+          error: (err) => {
+            console.error(err);
+            this.isLoading.set(false);
+            alert('Error al actualizar: ' + (err.error?.message || 'intenta de nuevo'));
+          },
+        });
     } else {
       // --- LÓGICA DE CREACIÓN (POST) ---
-      this.http.post<any>(`${environment.baseUrl}/products`, formValue).subscribe({
+      this.http.post<any>(`${environment.baseUrl}/products`, payload, { headers }).subscribe({
         next: (newProduct) => {
-          // Agregar el nuevo producto a la lista
           this.products.update((prev) => [...prev, newProduct]);
           this.closeModal();
           this.isLoading.set(false);
@@ -160,7 +193,7 @@ export class ProductsComponent implements OnInit {
         error: (err) => {
           console.error(err);
           this.isLoading.set(false);
-          alert('Error al crear el producto');
+          alert('Error al crear: ' + (err.error?.message || 'revisa los datos'));
         },
       });
     }
