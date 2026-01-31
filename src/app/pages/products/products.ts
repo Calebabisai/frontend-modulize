@@ -146,16 +146,10 @@ export class ProductsComponent implements OnInit {
       return;
     }
 
-    // Preparamos el Token de Autorización
-    const token = localStorage.getItem('access_token');
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-
+    const headers = this.getHeaders(); // Usamos tu función auxiliar
     const formValue = this.productForm.getRawValue();
     this.isLoading.set(true);
 
-    // Payload con conversión de tipos para Prisma
     const payload = {
       ...formValue,
       price: Number(formValue.price),
@@ -166,34 +160,47 @@ export class ProductsComponent implements OnInit {
     };
 
     if (this.isEditing() && this.selectedProduct()) {
-      // --- LÓGICA DE EDICIÓN (PATCH) ---
       const id = this.selectedProduct().id;
       this.http
         .patch<any>(`${environment.baseUrl}/products/${id}`, payload, { headers })
         .subscribe({
           next: (updatedProduct) => {
-            this.products.update((prev) => prev.map((p) => (p.id === id ? updatedProduct : p)));
+            //  Buscamos la categoría para que no se pierda el nombre al editar
+            const fullCategory = this.categories().find((c) => c.id === updatedProduct.categoryId);
+            const productWithCategory = { ...updatedProduct, category: fullCategory };
+
+            this.products.update((prev) =>
+              prev.map((p) => (p.id === id ? productWithCategory : p)),
+            );
             this.closeModal();
             this.isLoading.set(false);
           },
           error: (err) => {
-            console.error(err);
             this.isLoading.set(false);
-            alert('Error al actualizar: ' + (err.error?.message || 'intenta de nuevo'));
+            alert('Error al actualizar: ' + err.error?.message);
           },
         });
     } else {
       // --- LÓGICA DE CREACIÓN (POST) ---
       this.http.post<any>(`${environment.baseUrl}/products`, payload, { headers }).subscribe({
         next: (newProduct) => {
-          this.products.update((prev) => [...prev, newProduct]);
+          // El backend solo manda categoryId. Nosotros buscamos el objeto completo de la categoría
+          // en nuestro signal local para que la UI lo muestre correctamente de inmediato.
+          const fullCategory = this.categories().find((c) => c.id === newProduct.categoryId);
+
+          // Creamos un objeto que combine la respuesta del server con la categoría local
+          const enrichedProduct = {
+            ...newProduct,
+            category: fullCategory, // Esto quita el "General" y pone el nombre real
+          };
+
+          this.products.update((prev) => [...prev, enrichedProduct]);
           this.closeModal();
           this.isLoading.set(false);
         },
         error: (err) => {
-          console.error(err);
           this.isLoading.set(false);
-          alert('Error al crear: ' + (err.error?.message || 'revisa los datos'));
+          alert('Error al crear: ' + err.error?.message);
         },
       });
     }
