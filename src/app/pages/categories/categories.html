@@ -1,1 +1,102 @@
-<p>categories works!</p>
+<section class="categories-section">
+  <div class="container">
+    <div class="grid-header-bar">
+      <div>
+        <h2>Explora por Categorías</h2>
+        <p>Gestiona las secciones de tu inventario</p>
+      </div>
+
+      @if (authService.isAdmin()) {
+        <button class="btn-hero small" (click)="openAddModal()">Nueva Categoría</button>
+      }
+    </div>
+
+    <div class="grid-3">
+      @if (isLoading()) {
+        @for (i of [1, 2, 3]; track i) {
+          <div class="category-card skeleton"></div>
+        }
+      } @else {
+        @for (cat of categories(); track cat.id) {
+          <div class="category-card" (click)="selectCategory(cat.id)">
+            <div class="cat-content-wrapper">
+              <div class="cat-header">
+                <h3>{{ cat.name }}</h3>
+              </div>
+
+              <div class="cat-description">
+                <p>{{ cat.description || 'Sin descripción disponible.' }}</p>
+              </div>
+
+              <div class="cat-spacer"></div>
+
+              @if (authService.isAdmin()) {
+                <div class="cat-actions">
+                  <button class="btn-icon edit" (click)="openEditModal(cat, $event)">
+                    <span class="material-icons">edit</span>
+                  </button>
+                  <button class="btn-icon delete" (click)="deleteCategory(cat.id, $event)">
+                    <span class="material-icons">delete</span>
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+        } @empty {
+          <div class="empty-state">
+            <span class="material-icons icon-large">category</span>
+            <p>No hay categorías registradas.</p>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</section>
+
+@if (showModal()) {
+  <div class="modal-overlay">
+    <div class="modal-content scale-in">
+      <div class="modal-header">
+        <h2>{{ isEditing() ? 'Editar Categoría' : 'Nueva Categoría' }}</h2>
+        <button class="btn-close" (click)="closeModal()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="categoryForm" class="category-form">
+          <div class="form-group">
+            <label for="catName">Nombre *</label>
+            <input
+              type="text"
+              id="catName"
+              formControlName="name"
+              class="form-input"
+              placeholder="Ej: Electrónica"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="catDesc">Descripción</label>
+            <textarea
+              id="catDesc"
+              formControlName="description"
+              class="form-input"
+              rows="3"
+              placeholder="Describe brevemente esta categoría..."
+            ></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button
+          class="btn-save"
+          (click)="saveCategory()"
+          [disabled]="isLoading() || categoryForm.invalid"
+        >
+          {{ isLoading() ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

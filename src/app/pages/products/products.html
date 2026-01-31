@@ -60,7 +60,7 @@
                 [style.background-image]="product.imageUrl ? 'url(' + product.imageUrl + ')' : null"
               >
                 @if (!product.imageUrl) {
-                  <span class="material-icons card-icon">inventario</span>
+                  <span class="material-icons card-icon">inventory</span>
                 }
 
                 @if (product.imageUrl) {
@@ -86,7 +86,7 @@
                 <div class="data-row">
                   <span class="data-label">Stock</span>
                   <div class="data-line"></div>
-                  <span class="data-value" [class.low-stock]="product.stock < 2">
+                  <span class="data-value" [class.low-stock]="product.stock < 5">
                     {{ product.stock }} u.
                   </span>
                 </div>
@@ -119,8 +119,7 @@
             </div>
           } @empty {
             <div class="empty-state">
-              <span class="material-icons">search_off</span>
-              <p>No se encontraron productos en esta categoría.</p>
+              <p>No se encontraron productos en esta categoría</p>
             </div>
           }
         }
@@ -128,46 +127,8 @@
     </div>
   </section>
 
-  <section class="bottom-section">
-    <div class="container">
-      <h2 style="color: white; margin-bottom: 30px; text-align: center">Explora por Categorías</h2>
-
-      <div class="grid-3">
-        @for (cat of categories(); track cat.id) {
-          <div
-            class="info-card category-card"
-            [class.teal]="selectedCategoryId() === cat.id"
-            [class.elevated]="selectedCategoryId() === cat.id"
-            [class.dark]="selectedCategoryId() !== cat.id"
-            [style.background-image]="cat.imageUrl ? 'url(' + cat.imageUrl + ')' : null"
-            (click)="selectCategoryAndScroll(cat.id)"
-            style="cursor: pointer"
-          >
-            <div class="cat-overlay"></div>
-
-            <div class="cat-content-wrapper">
-              @if (selectedCategoryId() === cat.id) {
-                <div class="circle-deco"></div>
-              }
-
-              <h3>{{ cat.name }}</h3>
-              <p>Ver todos los productos relacionados con {{ cat.name }}.</p>
-
-              @if (selectedCategoryId() === cat.id) {
-                <button class="btn-white">Viendo Ahora</button>
-              } @else {
-                <button class="btn-link">Ver Categoría</button>
-              }
-            </div>
-          </div>
-        } @empty {
-          <div class="info-card dark">
-            <h3>Cargando...</h3>
-            <p>Obteniendo categorías del sistema</p>
-          </div>
-        }
-      </div>
-    </div>
+  <section>
+    <app-categories (categorySelected)="selectCategoryAndScroll($event)"></app-categories>
   </section>
 
   <app-footer></app-footer>
@@ -244,7 +205,7 @@
             <div class="form-group">
               <label for="imageUrl">URL de Imagen (Opcional)</label>
               <div class="url-input-group">
-                <span class="material-icons url-icon">link</span>
+                <span>link</span>
                 <input
                   type="text"
                   id="imageUrl"

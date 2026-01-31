@@ -6,11 +6,16 @@ import { AuthService } from '../../core/services/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CategoriesComponent } from '../categories/categories';
+
+// Importa tus interfaces
+import { Product } from '../../interfaces/product.interface';
+import { Category } from '../../interfaces/category.interface';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, Navbar, Footer, ReactiveFormsModule],
+  imports: [CommonModule, Navbar, Footer, ReactiveFormsModule, CategoriesComponent],
   templateUrl: './products.html',
   styleUrls: ['./products.css'],
 })
@@ -18,24 +23,27 @@ export class ProductsComponent implements OnInit {
   authService = inject(AuthService);
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
-  // --- SIGNALS DE DATOS ---
-  products = signal<any[]>([]);
-  categories = signal<any[]>([]);
+
+  // --- SIGNALS DE DATOS (Tipados correctamente) ---
+  products = signal<Product[]>([]);
+  categories = signal<Category[]>([]);
   isLoading = signal(true);
 
   // --- SIGNALS DE ESTADO ---
-  selectedCategoryId = signal<number | null>(null); // null = "Ver Todos"
+  // CORRECCIÓN: Cambiado de number | null a string | null
+  selectedCategoryId = signal<string | null>(null);
   showModal = signal(false);
   isEditing = signal(false);
-  selectedProduct = signal<any>(null);
+  selectedProduct = signal<Product | null>(null);
 
-  // Usamos un campo de texto para la URL de la imagen por ahora.
+  // Formulario
   productForm = this.fb.group({
     name: ['', [Validators.required]],
     description: [''],
     price: [0, [Validators.required, Validators.min(0)]],
     stock: [0, [Validators.required, Validators.min(0)]],
-    categoryId: [null as number | null, [Validators.required]],
+    // CORRECCIÓN: El categoryId ahora espera un string
+    categoryId: [null as string | null, [Validators.required]],
     imageUrl: [''],
   });
 
@@ -44,6 +52,7 @@ export class ProductsComponent implements OnInit {
     const allProducts = this.products();
 
     if (!catId) return allProducts;
+    // Ahora la comparación es segura: string === string
     return allProducts.filter((p) => p.categoryId === catId || p.category?.id === catId);
   });
 
@@ -62,7 +71,7 @@ export class ProductsComponent implements OnInit {
     this.isLoading.set(true);
 
     // 1. Cargar Productos
-    this.http.get<any[]>(`${environment.baseUrl}/products`).subscribe({
+    this.http.get<Product[]>(`${environment.baseUrl}/products`).subscribe({
       next: (data) => {
         this.products.set(data);
         this.isLoading.set(false);
@@ -73,25 +82,24 @@ export class ProductsComponent implements OnInit {
       },
     });
 
-    // 2. Cargar Categorías (Para los filtros)
-    this.http.get<any[]>(`${environment.baseUrl}/categories`).subscribe({
+    // 2. Cargar Categorías
+    this.http.get<Category[]>(`${environment.baseUrl}/categories`).subscribe({
       next: (data) => this.categories.set(data),
     });
   }
-  // --- Función para seleccionar categoría y hacer scroll ---
-  selectCategoryAndScroll(catId: number) {
-    // Actualizar el filtro
+
+  // --- CORRECCIÓN: Recibe string en lugar de number ---
+  selectCategoryAndScroll(catId: string) {
     this.selectedCategoryId.set(catId);
 
-    // croll suave hacia la tabla de productos
     const gridSection = document.querySelector('.inventory-grid-section');
     if (gridSection) {
       gridSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
-  // --- Acciones de UI ---
-  filterBy(catId: number | null) {
+  // --- CORRECCIÓN: Recibe string | null ---
+  filterBy(catId: string | null) {
     this.selectedCategoryId.set(catId);
   }
 
@@ -99,12 +107,11 @@ export class ProductsComponent implements OnInit {
   openAddModal() {
     this.isEditing.set(false);
     this.selectedProduct.set(null);
-    // RESETEAR TAMBIÉN LA DESCRIPCIÓN
     this.productForm.reset({ price: 0, stock: 0, description: '' });
     this.showModal.set(true);
   }
 
-  openEditModal(product: any) {
+  openEditModal(product: Product) {
     this.isEditing.set(true);
     this.selectedProduct.set(product);
 
@@ -113,6 +120,7 @@ export class ProductsComponent implements OnInit {
       description: product.description || '',
       price: product.price,
       stock: product.stock,
+      // Manejamos la posibilidad de que venga directo o anidado
       categoryId: product.categoryId || product.category?.id,
       imageUrl: product.imageUrl || '',
     });
@@ -124,7 +132,8 @@ export class ProductsComponent implements OnInit {
     this.showModal.set(false);
   }
 
-  deleteProduct(id: number) {
+  // CORRECCIÓN: Recibe string
+  deleteProduct(id: string) {
     if (confirm('¿Seguro que quieres eliminar este producto?')) {
       this.http
         .delete(`${environment.baseUrl}/products/${id}`, {
@@ -146,7 +155,7 @@ export class ProductsComponent implements OnInit {
       return;
     }
 
-    const headers = this.getHeaders(); // Usamos tu función auxiliar
+    const headers = this.getHeaders();
     const formValue = this.productForm.getRawValue();
     this.isLoading.set(true);
 
@@ -154,18 +163,19 @@ export class ProductsComponent implements OnInit {
       ...formValue,
       price: Number(formValue.price),
       stock: Number(formValue.stock),
-      categoryId: Number(formValue.categoryId),
+      // CORRECCIÓN CRÍTICA: NO convertir categoryId a Number() porque es un UUID string
+      categoryId: formValue.categoryId,
       description: formValue.description?.trim() || null,
       imageUrl: formValue.imageUrl?.trim() || null,
     };
 
     if (this.isEditing() && this.selectedProduct()) {
-      const id = this.selectedProduct().id;
+      const id = this.selectedProduct()!.id;
       this.http
-        .patch<any>(`${environment.baseUrl}/products/${id}`, payload, { headers })
+        .patch<Product>(`${environment.baseUrl}/products/${id}`, payload, { headers })
         .subscribe({
           next: (updatedProduct) => {
-            //  Buscamos la categoría para que no se pierda el nombre al editar
+            // Buscamos la categoría completa para actualizar la vista localmente
             const fullCategory = this.categories().find((c) => c.id === updatedProduct.categoryId);
             const productWithCategory = { ...updatedProduct, category: fullCategory };
 
@@ -181,17 +191,14 @@ export class ProductsComponent implements OnInit {
           },
         });
     } else {
-      // --- LÓGICA DE CREACIÓN (POST) ---
-      this.http.post<any>(`${environment.baseUrl}/products`, payload, { headers }).subscribe({
+      // --- CREACIÓN (POST) ---
+      this.http.post<Product>(`${environment.baseUrl}/products`, payload, { headers }).subscribe({
         next: (newProduct) => {
-          // El backend solo manda categoryId. Nosotros buscamos el objeto completo de la categoría
-          // en nuestro signal local para que la UI lo muestre correctamente de inmediato.
           const fullCategory = this.categories().find((c) => c.id === newProduct.categoryId);
 
-          // Creamos un objeto que combine la respuesta del server con la categoría local
           const enrichedProduct = {
             ...newProduct,
-            category: fullCategory, // Esto quita el "General" y pone el nombre real
+            category: fullCategory,
           };
 
           this.products.update((prev) => [...prev, enrichedProduct]);
