@@ -23,22 +23,38 @@
       <div class="grid-header-bar">
         <h2>Catálogo ({{ filteredProducts().length }})</h2>
 
-        <div class="grid-controls">
-          <span
-            class="control-pill"
-            [class.active]="selectedCategoryId() === null"
-            (click)="filterBy(null)"
-          >
-            Todos
-          </span>
-          @for (cat of categories(); track cat.id) {
-            <span
-              class="control-pill"
-              [class.active]="selectedCategoryId() === cat.id"
-              (click)="filterBy(cat.id)"
-            >
-              {{ cat.name }}
-            </span>
+        <div class="custom-dropdown">
+          <button class="dropdown-trigger" (click)="toggleDropdown()">
+            <span>{{ currentCategoryName }}</span>
+            <div class="arrow" [class.rotated]="showCategoryDropdown()"></div>
+          </button>
+
+          @if (showCategoryDropdown()) {
+            <div class="dropdown-menu scale-in">
+              <div
+                class="dropdown-item"
+                [class.active]="selectedCategoryId() === null"
+                (click)="overrideFilterBy(null)"
+              >
+                Todas las Categorías
+              </div>
+
+              <div class="dropdown-divider"></div>
+
+              @for (cat of categories(); track cat.id) {
+                <div
+                  class="dropdown-item"
+                  [class.active]="selectedCategoryId() === cat.id"
+                  (click)="overrideFilterBy(cat.id)"
+                >
+                  {{ cat.name }}
+                </div>
+              }
+            </div>
+          }
+
+          @if (showCategoryDropdown()) {
+            <div class="dropdown-backdrop" (click)="showCategoryDropdown.set(false)"></div>
           }
         </div>
       </div>

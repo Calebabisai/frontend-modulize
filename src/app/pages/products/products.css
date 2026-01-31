@@ -1,12 +1,18 @@
 :host {
+  /* --- PALETA DE COLORES --- */
   --primary: #11c4d4;
   --primary-hover: #0e9aa8;
-  --dark-bg: #0f172a;
-  --card-bg: #1e293b;
-  --light-bg: #f8fafc;
-  --text-main: #f1f5f9;
-  --text-muted: #94a3b8;
-  --border-color: #334155; /* Variable útil para bordes */
+
+  /* COLORES DE FONDO */
+  --app-bg: #f1f5f9; /* Gris Humo (Fondo de la página) */
+  --dark-bg: #0f172a; /* Azul oscuro (Hero, Modales) */
+  --card-bg: #ffffff; /* Blanco (Variable base, pero sobreescribiremos la tarjeta) */
+
+  /* TEXTOS */
+  --text-main: #0f172a; /* Texto oscuro */
+  --text-muted: #64748b; /* Texto secundario */
+
+  --border-color: #e2e8f0;
 
   display: block;
   font-family: 'Inter', sans-serif;
@@ -18,8 +24,9 @@
   margin: 0 auto;
   padding: 0 24px;
 }
+
 .page-wrapper {
-  background-color: var(--light-bg);
+  background-color: var(--app-bg);
   min-height: 100vh;
 }
 
@@ -36,6 +43,7 @@
   justify-content: space-between;
   align-items: flex-end;
 }
+
 .hero-line {
   width: 60px;
   height: 6px;
@@ -43,17 +51,20 @@
   margin-bottom: 24px;
   border-radius: 3px;
 }
+
 .hero-text h1 {
   font-size: 3rem;
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: 16px;
 }
+
 .text-teal {
   color: var(--primary);
 }
+
 .hero-text p {
-  color: var(--text-muted);
+  color: #94a3b8;
   font-size: 1.1rem;
   max-width: 500px;
 }
@@ -71,15 +82,17 @@
   gap: 8px;
   transition: transform 0.2s;
 }
+
 .btn-hero:hover {
   transform: translateY(-2px);
   background-color: var(--primary-hover);
+  box-shadow: 0 4px 12px rgba(17, 196, 212, 0.3);
 }
 
 /* --- 2. Inventory Grid Section --- */
 .inventory-grid-section {
   padding: 60px 0;
-  background-color: var(--light-bg);
+  background-color: var(--app-bg);
 }
 
 .grid-header-bar {
@@ -91,27 +104,8 @@
 
 .grid-header-bar h2 {
   font-size: 1.5rem;
-  color: var(--dark-bg);
+  color: var(--text-main);
   font-weight: 800;
-}
-
-.grid-controls {
-  display: flex;
-  gap: 8px;
-}
-.control-pill {
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  background: #e2e8f0;
-  color: #64748b;
-  transition: all 0.2s;
-}
-.control-pill.active {
-  background: var(--dark-bg);
-  color: var(--primary);
 }
 
 /* --- Cards Grid --- */
@@ -121,39 +115,43 @@
   gap: 32px;
 }
 
-/* --- DISEÑO DE TARJETA WIREFRAME --- */
+/* --- DISEÑO DE TARJETA (MODIFICADO: OSCURO) --- */
 .wireframe-card {
-  background: white;
-  border: 1px solid #cbd5e1;
-  border-radius: 12px;
+  background-color: #1e293b; /* <--- AHORA ES OSCURA */
+  border: 1px solid #334155; /* Borde oscuro */
+  border-radius: 16px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  height: auto;
+  min-height: 440px;
+  /* Sombra */
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   transition:
     transform 0.2s,
     box-shadow 0.2s,
     border-color 0.2s;
-  height: auto;
-  min-height: 440px;
-  display: flex;
-  flex-direction: column;
 }
 
 .wireframe-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.2),
+    0 10px 10px -5px rgba(0, 0, 0, 0.1);
   border-color: var(--primary);
 }
 
-/* 1. Bloque Superior (Header) */
+/* 1. Bloque Superior (Header de Tarjeta) */
 .card-header-block {
-  height: 120px;
-  background-color: var(--dark-bg);
+  height: 140px;
+  background-color: #0f172a; /* Header más oscuro */
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  /* Transición suave si cambia de imagen a color */
+  border-bottom: 1px solid #334155;
   transition: background-image 0.3s ease;
 }
 
@@ -163,282 +161,268 @@
   background-repeat: no-repeat;
 }
 
-/* Overlay oscuro sobre la imagen para que el ID resalte */
 .image-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.1));
+  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.2), rgba(15, 23, 42, 0.6));
   z-index: 1;
 }
 
 .card-icon {
   font-size: 48px;
-  color: rgba(255, 255, 255, 0.1);
-  z-index: 2; /* Sobre el overlay */
+  color: #334155; /* Icono oscuro sutil */
+  z-index: 2;
 }
 
 .id-tag {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(15, 23, 42, 0.6); /* Fondo semi-transparente */
-  color: white;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #e2e8f0;
   font-size: 0.75rem;
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
   font-family: monospace;
-  backdrop-filter: blur(2px);
-  z-index: 2; /* Sobre el overlay */
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* 2. Cuerpo de la Tarjeta */
 .card-body-block {
-  padding: 20px;
+  padding: 24px;
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
+
 .product-name {
   margin: 0;
-  font-size: 1.1rem;
-  color: var(--dark-bg);
+  font-size: 1.15rem;
+  color: white; /* <--- TEXTO BLANCO */
   font-weight: 700;
-  /* Truncar texto largo */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+.product-short-desc {
+  font-size: 0.9rem;
+  color: #94a3b8; /* Gris claro */
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+  min-height: 2.7em;
+}
+
 .data-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   font-size: 0.9rem;
 }
+
 .data-label {
-  color: #64748b;
+  color: #64748b; /* Etiqueta gris */
   font-weight: 500;
-  min-width: 60px;
+  min-width: 70px;
 }
+
 .data-line {
   flex: 1;
   height: 1px;
-  background: #e2e8f0;
+  background: #334155; /* Línea divisoria oscura */
 }
+
 .data-value {
   font-weight: 600;
-  color: #334155;
+  color: #f1f5f9; /* Valor casi blanco */
 }
+
 .data-value.price {
-  color: var(--primary-hover);
-  font-size: 1rem;
+  color: var(--primary); /* Precio Cyan */
+  font-size: 1.1rem;
+}
+
+.data-value.low-stock {
+  color: #f87171; /* Rojo claro */
 }
 
 /* 3. Footer con Botones */
 .card-footer-block {
-  background: #f8fafc;
-  border-top: 1px solid #e2e8f0;
-  padding: 12px 20px;
+  background: #1e293b; /* Fondo oscuro continuo */
+  padding: 16px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-top: 1px solid #334155;
 }
 
 .action-buttons {
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
+
 .btn-action {
-  width: 36px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.2s;
 }
 
 .btn-action.edit {
-  background: var(--primary);
-  color: var(--dark-bg);
+  background: rgba(17, 196, 212, 0.1); /* Cyan transparente */
+  color: var(--primary);
 }
+
 .btn-action.edit:hover {
-  filter: brightness(1.1);
+  background: var(--primary);
+  color: #0f172a;
 }
 
 .btn-action.delete {
-  background: #e2e8f0;
-  color: #64748b;
-}
-.btn-action.delete:hover {
-  background: #fee2e2;
+  background: rgba(239, 68, 68, 0.1); /* Rojo transparente */
   color: #ef4444;
 }
 
+.btn-action.delete:hover {
+  background: #ef4444;
+  color: white;
+}
+
 .read-only-text {
-  font-size: 0.8rem;
-  color: #94a3b8;
+  font-size: 0.85rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* --- CUSTOM DROPDOWN (Zero Dependencies - CSS Only) --- */
+.custom-dropdown {
+  position: relative;
+  min-width: 240px;
+}
+
+.dropdown-trigger {
+  width: 100%;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 4px;
-}
-
-.status-dots {
-  display: flex;
-  gap: 4px;
-}
-.dot {
-  width: 6px;
-  height: 6px;
-  background: var(--primary);
-  border-radius: 50%;
-  opacity: 0.5;
-}
-.dot:first-child {
-  opacity: 1;
-}
-
-/* --- 3. Bottom Section (Categorías) --- */
-.bottom-section {
-  background-color: #0b1120;
-  padding: 80px 0;
-}
-.grid-3 {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 30px;
-}
-
-.info-card {
-  padding: 0; /* Padding controlado internamente por cat-content-wrapper */
-  border-radius: 16px;
-  display: flex;
-  flex-direction: column;
-  min-height: 250px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background-size: cover;
-  background-position: center;
-}
-
-/* Overlays para Categorías */
-.cat-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.6));
-  z-index: 1;
-  transition: background 0.3s;
-}
-
-.info-card:hover .cat-overlay {
-  background: linear-gradient(to top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.4));
-}
-
-.cat-content-wrapper {
-  position: relative;
-  z-index: 2;
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  height: 100%;
-}
-
-/* Estados de Categoría */
-.info-card.dark {
-  background-color: var(--card-bg);
-  color: white;
-  border: 1px solid #334155;
-}
-.info-card.dark:hover {
-  border-color: var(--primary);
-  transform: translateY(-5px);
-}
-
-.info-card.teal {
-  background-color: var(--primary);
-  color: var(--dark-bg);
-  /* Si está activo, reducimos la opacidad del overlay para que brille más si hay imagen */
-  border: 2px solid var(--primary);
-}
-.info-card.teal .cat-overlay {
-  background: linear-gradient(to top, rgba(17, 196, 212, 0.8), rgba(17, 196, 212, 0.4));
-}
-.info-card.teal h3,
-.info-card.teal p {
-  color: var(--dark-bg);
+  background-color: white; /* El dropdown se queda blanco para contraste */
+  border: 1px solid var(--border-color);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
   font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.info-card.elevated {
-  transform: translateY(-15px) scale(1.02);
-  box-shadow: 0 25px 50px -12px rgba(17, 196, 212, 0.3);
-  z-index: 10;
+.dropdown-trigger:hover {
+  border-color: var(--primary);
 }
 
-.circle-deco {
+/* FLECHA CSS PURA */
+.arrow {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
+.arrow.rotated {
+  transform: rotate(180deg);
+}
+
+/* Menú Desplegable */
+.dropdown-menu {
   position: absolute;
-  top: -30px;
-  right: -30px;
-  width: 100px;
-  height: 100px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  pointer-events: none;
+  top: calc(100% + 8px);
+  right: 0;
+  left: 0;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
+  z-index: 50;
+  overflow: hidden;
+  padding: 6px;
 }
 
-.btn-link {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid #475569;
-  color: white;
-  padding: 10px;
+.dropdown-item {
+  display: block;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  color: var(--text-main);
   border-radius: 6px;
   cursor: pointer;
-  margin-top: auto;
-  backdrop-filter: blur(4px);
+  transition: background 0.2s;
+  font-weight: 500;
 }
-.btn-white {
-  background: white;
-  border: none;
-  color: var(--primary);
-  padding: 12px;
-  border-radius: 6px;
+
+.dropdown-item:hover {
+  background-color: var(--app-bg);
+}
+
+.dropdown-item.active {
+  background-color: #ecfeff;
+  color: var(--primary-hover);
   font-weight: 700;
-  cursor: pointer;
-  margin-top: auto;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* --- Modal Styles (Actualizados para el Formulario) --- */
+.dropdown-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 4px 0;
+}
+
+.dropdown-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  cursor: default;
+}
+
+/* --- MODAL --- */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(15, 23, 42, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2000;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(4px);
 }
+
 .modal-content {
-  background: var(--card-bg);
+  background: var(--dark-bg);
   width: 90%;
-  max-width: 600px; /* Un poco más ancho para el form */
+  max-width: 600px;
   padding: 32px;
   border-radius: 16px;
   color: white;
   border: 1px solid #334155;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  display: flex;
-  flex-direction: column;
-  max-height: 90vh; /* Para evitar desbordes en pantallas pequeñas */
+  max-height: 90vh;
   overflow-y: auto;
 }
+
 @keyframes scaleIn {
   from {
     transform: scale(0.95);
@@ -458,15 +442,18 @@
   border-bottom: 1px solid #334155;
   padding-bottom: 16px;
 }
+
 .btn-close {
   background: none;
   border: none;
   color: #94a3b8;
   cursor: pointer;
+  font-size: 1.2rem;
 }
+
 .modal-desc {
   margin-bottom: 20px;
-  color: var(--text-muted);
+  color: #94a3b8;
 }
 
 .product-form {
@@ -479,11 +466,13 @@
   display: flex;
   gap: 20px;
 }
+
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
+
 .form-group.half {
   flex: 1;
 }
@@ -491,51 +480,49 @@
 label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--text-main);
+  color: #e2e8f0;
 }
 
 .form-input {
   padding: 12px;
-  background-color: var(--dark-bg);
-  border: 1px solid var(--border-color);
+  background-color: #1e293b;
+  border: 1px solid #334155;
   border-radius: 8px;
   color: white;
   font-size: 1rem;
   transition: border-color 0.2s;
 }
+
 .form-input:focus {
   outline: none;
   border-color: var(--primary);
 }
-.form-select {
-  cursor: pointer;
-}
 
-/* Input de URL */
+/* Input URL */
 .url-input-group {
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-.url-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
+.url-input-group span {
   color: #64748b;
+  font-size: 0.8rem;
 }
-.form-input.pl-10 {
-  padding-left: 44px;
+.url-input-group input {
+  flex: 1;
 }
 
-/* Previsualización de Imagen */
+/* Preview Imagen Modal */
 .image-preview-container {
   margin-top: 10px;
-  background: var(--dark-bg);
+  background: #0f172a;
   padding: 10px;
   border-radius: 8px;
-  border: 1px dashed var(--border-color);
+  border: 1px dashed #334155;
   display: flex;
   justify-content: center;
 }
+
 .image-preview {
   max-width: 100%;
   height: 150px;
@@ -551,6 +538,7 @@ label {
   border-top: 1px solid #334155;
   padding-top: 20px;
 }
+
 .btn-cancel {
   background: transparent;
   color: #94a3b8;
@@ -558,65 +546,45 @@ label {
   padding: 10px 20px;
   cursor: pointer;
 }
-.btn-cancel:hover {
-  text-decoration: underline;
-  color: white;
-}
 
 .btn-save {
   background: var(--primary);
-  color: var(--dark-bg);
+  color: #0f172a;
   border: none;
   padding: 10px 24px;
   border-radius: 6px;
   font-weight: 700;
   cursor: pointer;
-  transition: filter 0.2s;
 }
+
 .btn-save:hover {
   filter: brightness(1.1);
 }
+
 .btn-save:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* --- Skeleton Loading --- */
+/* --- Skeleton Loading (Adaptado a Oscuro) --- */
 .wireframe-card.skeleton {
   border-color: transparent;
 }
 .wireframe-card.skeleton .card-header-block {
-  background: #cbd5e1;
+  background: #334155; /* Gris oscuro para skeleton */
   animation: pulse 1.5s infinite;
 }
 .wireframe-card.skeleton .card-body-block {
-  background: white;
+  background: #1e293b;
 }
 @keyframes pulse {
   0% {
     opacity: 1;
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.6;
   }
   100% {
     opacity: 1;
   }
-}
-/* Truncar descripción larga en la tarjeta */
-.product-short-desc {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-bottom: 15px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* Máximo 2 líneas */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.4;
-}
-
-/* Alerta visual de poco stock */
-.data-value.low-stock {
-  color: red; /* Naranja brillante */
-  font-weight: 800;
 }

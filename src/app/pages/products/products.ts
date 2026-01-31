@@ -35,6 +35,7 @@ export class ProductsComponent implements OnInit {
   showModal = signal(false);
   isEditing = signal(false);
   selectedProduct = signal<Product | null>(null);
+  showCategoryDropdown = signal(false);
 
   // Formulario
   productForm = this.fb.group({
@@ -65,6 +66,26 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit() {
     this.loadData();
+  }
+
+  // Función para obtener el nombre de la categoría seleccionada
+  get currentCategoryName(): string {
+    const selectedId = this.selectedCategoryId();
+    if (!selectedId) return 'Todas las Categorías';
+
+    const found = this.categories().find((c) => c.id === selectedId);
+    return found ? found.name : 'Todas las Categorías';
+  }
+
+  // Función para alternar el menú
+  toggleDropdown() {
+    this.showCategoryDropdown.update((v) => !v);
+  }
+
+  // Actualizamos filterBy para que también cierre el menú al seleccionar
+  overrideFilterBy(id: string | null) {
+    this.filterBy(id); // Tu función original
+    this.showCategoryDropdown.set(false); // Cerramos el menú
   }
 
   loadData() {

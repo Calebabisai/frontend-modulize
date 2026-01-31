@@ -1,23 +1,25 @@
 :host {
+  /* --- PALETA DE COLORES (Igual que Products) --- */
   --primary: #11c4d4;
   --primary-hover: #0e9aa8;
 
-  /* CAMBIO: Fondo general ahora es claro */
-  --dark-bg: #f8fafc;
-  /* CAMBIO: Color de texto para el fondo claro */
-  --text-main: #0f172a;
+  /* COLORES DE FONDO */
+  --app-bg: #f1f5f9; /* Gris Humo (Fondo de la página) */
+  --dark-bg: #0f172a; /* Azul oscuro profundo (Modales) */
+  --card-bg: #1e293b; /* Azul Pizarra (Tarjetas) */
 
-  /* Las tarjetas siguen oscuras */
-  --card-bg: #1e293b;
-  --text-muted: #64748b;
-  --border-color: #e2e8f0; /* Borde más suave para fondo claro */
+  /* TEXTOS */
+  --text-main: #0f172a; /* Texto oscuro (para el fondo gris) */
+  --text-muted: #64748b; /* Texto secundario */
+
+  --border-color: #e2e8f0;
 
   display: block;
 }
 
 /* --- SECCIÓN PRINCIPAL --- */
 .categories-section {
-  background-color: var(--dark-bg);
+  background-color: var(--app-bg);
   padding: 60px 0 80px 0;
   border-top: 1px solid var(--border-color);
   min-height: 100vh;
@@ -41,7 +43,7 @@
 }
 
 .grid-header-bar h2 {
-  /* CAMBIO: Texto oscuro */
+  /* Texto oscuro para resaltar sobre el fondo gris */
   color: var(--text-main);
   font-size: 1.8rem;
   font-weight: 700;
@@ -83,21 +85,23 @@
   gap: 32px;
 }
 
-/* --- TARJETAS (ESTILO OSCURO EN FONDO CLARO) --- */
+/* --- TARJETAS (ESTILO OSCURO) --- */
 .category-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  /* Ajuste para contenido de texto */
   min-height: 200px;
   border-radius: 16px;
-  background-color: var(--card-bg);
-  /* Sombra más pronunciada para resaltar sobre el blanco */
+
+  background-color: var(--card-bg); /* <--- FONDO OSCURO (#1e293b) */
+
+  /* Sombra suave para separar del fondo gris */
   box-shadow:
-    0 10px 25px -5px rgba(0, 0, 0, 0.1),
-    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
   overflow: hidden;
-  border: 1px solid #334155; /* Borde sutil oscuro */
+  border: 1px solid #334155; /* Borde oscuro */
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease,
@@ -124,16 +128,16 @@
 }
 
 .cat-header h3 {
-  color: white; /* Texto blanco sobre tarjeta oscura */
+  color: white; /* Título Blanco */
   margin: 0 0 10px 0;
   font-size: 1.4rem;
   font-weight: 700;
 }
 
-/* Estilos para la descripción (Agregado del paso anterior) */
+/* Descripción */
 .cat-description p {
   font-size: 0.95rem;
-  color: #94a3b8; /* Gris claro para leer sobre oscuro */
+  color: #94a3b8; /* Gris claro */
   margin: 0;
   line-height: 1.5;
   display: -webkit-box;
@@ -144,11 +148,11 @@
 }
 
 .cat-spacer {
-  flex: 1; /* Empuja los botones hacia abajo */
+  flex: 1;
   min-height: 16px;
 }
 
-/* --- BOTONES DE ACCIÓN (SIEMPRE VISIBLES) --- */
+/* --- BOTONES DE ACCIÓN --- */
 .cat-actions {
   display: flex;
   justify-content: flex-end;
@@ -156,10 +160,7 @@
   margin-top: auto;
   padding-top: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-
-  /* CAMBIO: Eliminada la opacidad 0 y el transform */
-  opacity: 1;
-  transform: none;
+  opacity: 1; /* Siempre visibles */
 }
 
 .btn-icon {
@@ -175,8 +176,8 @@
 }
 
 .btn-icon.edit {
-  background: rgba(255, 255, 255, 0.1); /* Fondo sutil */
-  color: #60a5fa; /* Azul claro */
+  background: rgba(17, 196, 212, 0.1); /* Cyan transparente */
+  color: var(--primary);
 }
 
 .btn-icon.edit:hover {
@@ -185,8 +186,8 @@
 }
 
 .btn-icon.delete {
-  background: rgba(239, 68, 68, 0.1);
-  color: #f87171; /* Rojo claro */
+  background: rgba(239, 68, 68, 0.1); /* Rojo transparente */
+  color: #ef4444;
 }
 
 .btn-icon.delete:hover {
@@ -199,7 +200,7 @@
   grid-column: 1 / -1;
   text-align: center;
   padding: 60px;
-  background: white;
+  background: white; /* El empty state puede ser blanco para resaltar */
   border-radius: 16px;
   border: 1px dashed var(--border-color);
   color: var(--text-muted);
@@ -213,7 +214,7 @@
 }
 
 .skeleton {
-  background-color: var(--card-bg); /* Skeleton oscuro */
+  background-color: #334155; /* Skeleton oscuro */
   animation: pulse 1.5s infinite;
   height: 220px;
   border-radius: 16px;
@@ -229,12 +230,11 @@
   }
 }
 
-/* --- MODAL (Mantengo estilo oscuro para contraste o prefieres claro?) --- */
-/* Lo dejaremos oscuro para mantener consistencia con las tarjetas */
+/* --- MODAL --- */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.6); /* Overlay más suave */
+  background: rgba(15, 23, 42, 0.7); /* Overlay oscuro */
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -243,7 +243,7 @@
 }
 
 .modal-content {
-  background: var(--card-bg); /* Fondo modal oscuro */
+  background: var(--dark-bg); /* Modal Oscuro (#0f172a) igual que products */
   width: 95%;
   max-width: 450px;
   padding: 30px;
@@ -296,7 +296,7 @@ label {
   padding: 12px;
   border-radius: 8px;
   border: 1px solid #334155;
-  background: #0f172a; /* Input muy oscuro */
+  background: #1e293b; /* Input oscuro */
   color: white;
   font-size: 0.95rem;
   transition: border-color 0.2s;
@@ -307,7 +307,6 @@ label {
   outline: none;
 }
 
-/* Ajuste Textarea */
 textarea.form-input {
   resize: vertical;
   min-height: 80px;
