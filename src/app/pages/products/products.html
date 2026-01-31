@@ -60,7 +60,7 @@
                 [style.background-image]="product.imageUrl ? 'url(' + product.imageUrl + ')' : null"
               >
                 @if (!product.imageUrl) {
-                  <span class="material-icons card-icon">inventory</span>
+                  <span class="material-icons card-icon">inventario</span>
                 }
 
                 @if (product.imageUrl) {
@@ -86,7 +86,7 @@
                 <div class="data-row">
                   <span class="data-label">Stock</span>
                   <div class="data-line"></div>
-                  <span class="data-value" [class.low-stock]="product.stock < 5">
+                  <span class="data-value" [class.low-stock]="product.stock < 2">
                     {{ product.stock }} u.
                   </span>
                 </div>

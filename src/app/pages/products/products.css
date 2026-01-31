@@ -617,6 +617,6 @@ label {
 
 /* Alerta visual de poco stock */
 .data-value.low-stock {
-  color: #fb923c; /* Naranja brillante */
+  color: red; /* Naranja brillante */
   font-weight: 800;
 }
