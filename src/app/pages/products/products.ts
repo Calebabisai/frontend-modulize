@@ -6,11 +6,11 @@ import { AuthService } from '../../core/services/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CategoriesComponent } from '../categories/categories';
 
 // Importa tus interfaces
 import { Product } from '../../interfaces/product.interface';
 import { Category } from '../../interfaces/category.interface';
+import { CategoriesComponent } from "../categories/categories";
 
 @Component({
   selector: 'app-products',

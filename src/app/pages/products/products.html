@@ -171,6 +171,10 @@
     </div>
   </section>
 
+  <section>
+    <app-categories (categorySelected)="selectCategoryAndScroll($event)"></app-categories>
+  </section>
+
   <section class="team-bubble-section">
     <div class="container">
       <div class="section-header">
