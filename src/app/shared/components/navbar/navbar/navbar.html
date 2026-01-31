@@ -1,9 +1,27 @@
 <nav class="navbar">
   <div class="container nav-content">
-    <div class="brand">
+    <div class="brand" (click)="onLogoClick()" style="cursor: pointer">
       <div class="logo-box"></div>
       <span class="brand-text">Modulize</span>
     </div>
-    <button (click)="authService.logout()" class="btn-primary">Salir</button>
+
+    <div class="user-actions">
+      @if (authService.currentUser(); as user) {
+        <div class="user-profile">
+          <div class="user-info">
+            <span class="user-name">{{ user.name }}</span>
+            <span class="user-role" [class.admin]="authService.isAdmin()">
+              {{ authService.isAdmin() ? 'Administrador' : 'Usuario' }}
+            </span>
+          </div>
+          <div class="user-avatar">{{ userInitials }}</div>
+        </div>
+        <div class="divider"></div>
+      }
+
+      <button (click)="authService.logout()" class="btn-logout">
+        <span class="btn-text">Salir</span>
+      </button>
+    </div>
   </div>
 </nav>
