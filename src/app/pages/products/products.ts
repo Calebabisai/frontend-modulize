@@ -5,18 +5,19 @@ import { Footer } from '../../shared/components/footer/footer/footer';
 import { AuthService } from '../../core/services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, Navbar, Footer],
+  imports: [CommonModule, Navbar, Footer, ReactiveFormsModule],
   templateUrl: './products.html',
   styleUrls: ['./products.css'],
 })
 export class ProductsComponent implements OnInit {
   authService = inject(AuthService);
   private http = inject(HttpClient);
-
+  private fb = inject(FormBuilder);
   // --- SIGNALS DE DATOS ---
   products = signal<any[]>([]);
   categories = signal<any[]>([]);
@@ -27,6 +28,14 @@ export class ProductsComponent implements OnInit {
   showModal = signal(false);
   isEditing = signal(false);
   selectedProduct = signal<any>(null);
+
+  // Usamos un campo de texto para la URL de la imagen por ahora.
+  productForm = this.fb.group({
+    name: ['', [Validators.required]],
+    price: [0, [Validators.required, Validators.min(0)]],
+    categoryId: [null as number | null, [Validators.required]],
+    imageUrl: [''],
+  });
 
   filteredProducts = computed(() => {
     const catId = this.selectedCategoryId();
@@ -81,12 +90,22 @@ export class ProductsComponent implements OnInit {
   openAddModal() {
     this.isEditing.set(false);
     this.selectedProduct.set(null);
+    this.productForm.reset({ price: 0 });
     this.showModal.set(true);
   }
 
   openEditModal(product: any) {
     this.isEditing.set(true);
     this.selectedProduct.set(product);
+
+    // PRE-LLENAR EL FORMULARIO AL ABRIR "EDITAR"
+    this.productForm.patchValue({
+      name: product.name,
+      price: product.price,
+      categoryId: product.categoryId || product.category?.id,
+      imageUrl: product.imageUrl || '', // Cargar la URL si existe
+    });
+
     this.showModal.set(true);
   }
 
@@ -105,7 +124,45 @@ export class ProductsComponent implements OnInit {
   }
 
   saveProduct() {
-    alert('Próximo paso: Formulario Reactivo');
-    this.closeModal();
+    if (this.productForm.invalid) {
+      alert('Por favor completa los campos requeridos');
+      return;
+    }
+
+    const formValue = this.productForm.getRawValue();
+    this.isLoading.set(true);
+
+    if (this.isEditing() && this.selectedProduct()) {
+      // --- LÓGICA DE EDICIÓN (PATCH) ---
+      const id = this.selectedProduct().id;
+      this.http.patch<any>(`${environment.baseUrl}/products/${id}`, formValue).subscribe({
+        next: (updatedProduct) => {
+          // Actualizar la lista localmente
+          this.products.update((prev) => prev.map((p) => (p.id === id ? updatedProduct : p)));
+          this.closeModal();
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          console.error(err);
+          this.isLoading.set(false);
+          alert('Error al actualizar el producto');
+        },
+      });
+    } else {
+      // --- LÓGICA DE CREACIÓN (POST) ---
+      this.http.post<any>(`${environment.baseUrl}/products`, formValue).subscribe({
+        next: (newProduct) => {
+          // Agregar el nuevo producto a la lista
+          this.products.update((prev) => [...prev, newProduct]);
+          this.closeModal();
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          console.error(err);
+          this.isLoading.set(false);
+          alert('Error al crear el producto');
+        },
+      });
+    }
   }
 }
