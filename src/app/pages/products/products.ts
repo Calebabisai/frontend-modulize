@@ -10,7 +10,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 // Importa tus interfaces
 import { Product } from '../../interfaces/product.interface';
 import { Category } from '../../interfaces/category.interface';
-import { CategoriesComponent } from "../categories/categories";
+import { CategoriesComponent } from '../categories/categories';
 
 @Component({
   selector: 'app-products',

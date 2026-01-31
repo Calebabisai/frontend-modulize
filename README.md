@@ -1,59 +1,129 @@
-# FrontendModulize
+Modulize Frontend Client
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.0.
+Este es el cliente web para la plataforma Modulize, diseñado para ofrecer una experiencia fluida y moderna en la gestión de inventarios activos. Está construido con Angular (versión moderna con Standalone Components) y utiliza Signals para un manejo de estado reactivo y eficiente.
+Stack Tecnológico
 
-## Development server
+    Framework: Angular (Standalone Components)
 
-To start a local development server, run:
+    Lenguaje: TypeScript
 
-```bash
+    Estado & Reactividad: Angular Signals & Computed Properties.
+
+    Estilos: CSS3 Nativo con Variables (Custom Properties) para theming.
+
+    Iconografía: Google Material Icons.
+
+    Gestor de Paquetes: npm
+
+Prerrequisitos
+
+Para ejecutar este proyecto necesitas tener instalado:
+
+    Node.js (LTS recomendado).
+
+    Angular CLI: La herramienta de línea de comandos de Angular.
+    Bash
+
+    npm install -g @angular/cli
+
+    Backend Corriendo: Este proyecto requiere que el servidor backend de Modulize esté ejecutándose (usualmente en el puerto 3000).
+
+Instalación y Configuración
+
+1. Clonar e Instalar Dependencias
+   Bash
+
+# Clona el repositorio
+
+git clone <https://github.com/Calebabisai/frontend-modulize>
+cd frontend-modulize
+
+# Instala las dependencias con npm
+
+npm install
+
+2. Configuración de Conexión (Environment)
+
+Para que el frontend sepa dónde está el backend, verifica el archivo de entorno.
+
+Ve a src/environments/environment.ts (o environment.development.ts) y asegúrate de que la apiUrl coincida con el puerto de tu backend NestJS:
+TypeScript
+
+export const environment = {
+production: false,
+// Asegúrate de que este puerto (3000) sea el mismo que definiste en el .env del Backend
+apiUrl: 'http://localhost:3000/api'
+};
+
+▶Ejecutar la Aplicación
+
+Una vez instaladas las dependencias y con el Backend corriendo en otra terminal, inicia el servidor de desarrollo:
+Bash
+
 ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+O usando npm:
+Bash
 
-## Code scaffolding
+npm start
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+La aplicación estará disponible en: http://localhost:4200
 
-```bash
-ng generate component component-name
-```
+Estructura del Proyecto
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+El proyecto sigue una arquitectura organizada por funcionalidades (Features) y Standalone Components.
 
-```bash
-ng generate --help
-```
+src/app/
+├── core/ # Lógica de negocio esencial (Singleton services)
+│ ├── guards/ # Guardias de ruta (AuthGuard)
+│ ├── services/ # Servicios HTTP (AuthService, ProductService)
+│ └── interceptors/ # Interceptores para JWT
+├── pages/ # Vistas principales (Rutas)
+│ ├── auth/ # Login y Registro
+│ ├── products/ # Catálogo principal, Paginación y Modales
+│ └── categories/ # Gestión de categorías
+├── shared/ # Componentes reutilizables
+│ ├── navbar/ # Barra de navegación superior
+│ ├── footer/ # Pie de página
+│ └── ui/ # Elementos de UI genéricos
+└── app.routes.ts # Definición de rutas y Lazy Loading
 
-## Building
+Funcionalidades Clave
 
-To build the project run:
+    Gestión de Inventario: CRUD completo de productos con paginación optimizada (6 items por vista).
 
-```bash
-ng build
-```
+    Filtrado Inteligente: Filtrado reactivo por categorías sin recargar la página.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+    Seguridad: Protección de rutas mediante Guards y manejo de sesión con JWT.
 
-## Running unit tests
+    Interfaz Reactiva: Uso de Signals para actualizaciones instantáneas de la UI (Stock, Precios, Filtros).
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+    Sección de Equipo: Visualización estética de los miembros del proyecto.
 
-```bash
-ng test
-```
+Construcción para Producción
 
-## Running end-to-end tests
+Para generar los archivos estáticos optimizados para despliegue (carpeta dist/):
+Bash
 
-For end-to-end (e2e) testing, run:
+npm run build
 
-```bash
-ng e2e
-```
+Solución de Problemas Comunes
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+    Error de CORS: Si al intentar loguearte o cargar productos ves un error de CORS en la consola, asegúrate de que en el main.ts de tu Backend hayas habilitado CORS:
+    TypeScript
 
-## Additional Resources
+    // En el Backend (main.ts)
+    app.enableCors();
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+    Iconos no aparecen: Verifica que en tu index.html esté importada la fuente de Material Icons:
+    HTML
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+Nota para Desarrolladores
+
+Recuerda que este es un sistema distribuido. Orden de encendido:
+
+    Terminal 1: Backend (pnpm start:dev) -> Espera a que diga "Nest application successfully started".
+
+    Terminal 2: Frontend (npm start) -> Abre el navegador en localhost:4200.
