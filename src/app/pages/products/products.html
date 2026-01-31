@@ -171,8 +171,29 @@
     </div>
   </section>
 
-  <section>
-    <app-categories (categorySelected)="selectCategoryAndScroll($event)"></app-categories>
+  <section class="team-bubble-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Nuestro Equipo</h2>
+        <p>El talento detrás de la plataforma</p>
+      </div>
+
+      <div class="bubbles-grid">
+        @for (member of team(); track member.name) {
+          <div class="member-bubble-container">
+            <div class="bubble-dark">
+              <span class="material-icons">person</span>
+              <div class="bubble-ring"></div>
+            </div>
+
+            <div class="bubble-info">
+              <h3>{{ member.name }}</h3>
+              <span class="role-tag">{{ member.role }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
   </section>
 
   <app-footer></app-footer>

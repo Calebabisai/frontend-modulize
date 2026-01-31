@@ -30,6 +30,24 @@ export class ProductsComponent implements OnInit {
   isLoading = signal(true);
   currentPage = signal(1);
   pageSize = signal(6);
+  // En tu clase ProductsComponent
+  team = signal([
+    {
+      name: 'Caleb Trevizo',
+      role: 'Lead Developer',
+      bio: 'Especialista en Frontend con Angular y apasionado por la arquitectura de software.',
+    },
+    {
+      name: 'Miembro 2',
+      role: 'Backend Engineer',
+      bio: 'Experto en NestJS y gestión de bases de datos PostgreSQL de alto rendimiento.',
+    },
+    {
+      name: 'Miembro 3',
+      role: 'UI/UX Designer',
+      bio: 'Responsable de la experiencia visual y la interfaz intuitiva de la plataforma.',
+    },
+  ]);
 
   // --- SIGNALS DE ESTADO ---
   // CORRECCIÓN: Cambiado de number | null a string | null
